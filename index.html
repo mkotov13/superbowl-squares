@@ -53,14 +53,17 @@
         /* Views Container */
         .views {
             display: flex;
-            width: 200%;
+            width: 300%;
             transition: transform 0.3s ease;
         }
+        .views.show-scenarios {
+            transform: translateX(-33.333%);
+        }
         .views.show-grid {
-            transform: translateX(-50%);
+            transform: translateX(-66.666%);
         }
         .view {
-            width: 50%;
+            width: 33.333%;
             min-height: calc(100vh - 60px);
             padding: 20px;
         }
@@ -341,6 +344,141 @@
             padding: 10px;
         }
 
+        /* Scenarios View */
+        .scenarios-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .scenarios-view h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        .current-score-display {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        .scenario-current-winner {
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+
+        /* Next Score Section */
+        .next-scores {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+        .next-scores-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .team-scenarios {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 12px;
+        }
+        .team-scenarios h4 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .team-scenarios.away h4 {
+            color: #4fc3f7;
+        }
+        .team-scenarios.home h4 {
+            color: #ff6b6b;
+        }
+        .scenario-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            font-size: 0.8rem;
+        }
+        .scenario-play {
+            color: #888;
+            min-width: 65px;
+        }
+        .scenario-score {
+            color: #4fc3f7;
+            font-size: 0.75rem;
+            min-width: 45px;
+            text-align: center;
+        }
+        .scenario-winner {
+            font-weight: 700;
+            color: #ffd700;
+            min-width: 30px;
+            text-align: right;
+        }
+        .scenario-winner.current {
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Hot squares on grid */
+        .squares-grid td.hot-away {
+            box-shadow: inset 0 0 0 2px #4fc3f7;
+        }
+        .squares-grid td.hot-home {
+            box-shadow: inset 0 0 0 2px #ff6b6b;
+        }
+        .squares-grid td.hot-both {
+            box-shadow: inset 0 0 0 2px #9c27b0;
+        }
+        .squares-grid td.winner.hot-away,
+        .squares-grid td.winner.hot-home,
+        .squares-grid td.winner.hot-both {
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Grid controls */
+        .grid-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .grid-toggle {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: #aaa;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .grid-toggle:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .grid-toggle.active {
+            background: rgba(79, 195, 247, 0.3);
+            border-color: #4fc3f7;
+            color: #4fc3f7;
+        }
+
+        /* Updated legend */
+        .legend-box.hot-away {
+            background: rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 0 2px #4fc3f7;
+        }
+        .legend-box.hot-home {
+            background: rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 0 2px #ff6b6b;
+        }
+        .legend-box.hot-both {
+            background: rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 0 2px #9c27b0;
+        }
+
         @media (max-width: 600px) {
             .live-view {
                 flex-direction: column;
@@ -353,9 +491,25 @@
                 width: 100%;
                 max-width: 350px;
             }
+            .next-scores {
+                max-width: 350px;
+            }
+            .next-scores-grid {
+                gap: 10px;
+            }
+            .scenarios-view h2 {
+                font-size: 1.5rem;
+            }
             .squares-grid th, .squares-grid td {
                 width: 32px;
                 height: 32px;
+                font-size: 0.7rem;
+            }
+            .grid-controls {
+                gap: 5px;
+            }
+            .grid-toggle {
+                padding: 6px 12px;
                 font-size: 0.7rem;
             }
         }
@@ -364,6 +518,7 @@
 <body>
     <div class="tabs">
         <button class="tab active" onclick="showView('live')">Live</button>
+        <button class="tab" onclick="showView('scenarios')">What If</button>
         <button class="tab" onclick="showView('grid')">Grid</button>
     </div>
 
@@ -427,15 +582,82 @@
             </div>
         </div>
 
+        <!-- Scenarios View -->
+        <div class="view scenarios-view">
+            <h2>What If...</h2>
+            <div class="current-score-display">
+                Current: <span id="scenario-score">0 - 0</span> → <span id="scenario-winner" class="scenario-current-winner">--</span>
+            </div>
+            <div class="next-scores">
+                <div class="next-scores-grid">
+                    <div class="team-scenarios away">
+                        <h4 id="away-team-label">SEA scores</h4>
+                        <div class="scenario-row">
+                            <span class="scenario-play">+3 FG</span>
+                            <span class="scenario-score" id="away-3-score">--</span>
+                            <span class="scenario-winner" id="away-3">--</span>
+                        </div>
+                        <div class="scenario-row">
+                            <span class="scenario-play">+6 TD</span>
+                            <span class="scenario-score" id="away-6-score">--</span>
+                            <span class="scenario-winner" id="away-6">--</span>
+                        </div>
+                        <div class="scenario-row">
+                            <span class="scenario-play">+7 TD+PAT</span>
+                            <span class="scenario-score" id="away-7-score">--</span>
+                            <span class="scenario-winner" id="away-7">--</span>
+                        </div>
+                        <div class="scenario-row">
+                            <span class="scenario-play">+8 TD+2pt</span>
+                            <span class="scenario-score" id="away-8-score">--</span>
+                            <span class="scenario-winner" id="away-8">--</span>
+                        </div>
+                    </div>
+                    <div class="team-scenarios home">
+                        <h4 id="home-team-label">NE scores</h4>
+                        <div class="scenario-row">
+                            <span class="scenario-play">+3 FG</span>
+                            <span class="scenario-score" id="home-3-score">--</span>
+                            <span class="scenario-winner" id="home-3">--</span>
+                        </div>
+                        <div class="scenario-row">
+                            <span class="scenario-play">+6 TD</span>
+                            <span class="scenario-score" id="home-6-score">--</span>
+                            <span class="scenario-winner" id="home-6">--</span>
+                        </div>
+                        <div class="scenario-row">
+                            <span class="scenario-play">+7 TD+PAT</span>
+                            <span class="scenario-score" id="home-7-score">--</span>
+                            <span class="scenario-winner" id="home-7">--</span>
+                        </div>
+                        <div class="scenario-row">
+                            <span class="scenario-play">+8 TD+2pt</span>
+                            <span class="scenario-score" id="home-8-score">--</span>
+                            <span class="scenario-winner" id="home-8">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Grid View -->
         <div class="view grid-view">
             <h2>All Squares</h2>
             <div class="grid-subtitle">NE (rows) vs SEA (columns)</div>
+            <div class="grid-controls">
+                <button class="grid-toggle active" onclick="toggleHotSquares(this, 'all')">Show Hot Squares</button>
+                <button class="grid-toggle" onclick="toggleHotSquares(this, 'away')">SEA Only</button>
+                <button class="grid-toggle" onclick="toggleHotSquares(this, 'home')">NE Only</button>
+                <button class="grid-toggle" onclick="toggleHotSquares(this, 'none')">Hide</button>
+            </div>
             <div class="grid-container">
                 <table class="squares-grid" id="squares-grid"></table>
             </div>
             <div class="grid-legend">
                 <div class="legend-item"><div class="legend-box current"></div> Current</div>
+                <div class="legend-item"><div class="legend-box hot-away"></div> SEA scores</div>
+                <div class="legend-item"><div class="legend-box hot-home"></div> NE scores</div>
+                <div class="legend-item"><div class="legend-box hot-both"></div> Either team</div>
                 <div class="legend-item"><div class="legend-box q1"></div> Q1</div>
                 <div class="legend-item"><div class="legend-box q2"></div> Half</div>
                 <div class="legend-item"><div class="legend-box q3"></div> Q3</div>
@@ -443,7 +665,7 @@
         </div>
     </div>
 
-    <div class="swipe-hint">Swipe or tap tabs to switch views</div>
+    <div class="swipe-hint">Swipe or tap tabs: Live ↔ What If ↔ Grid</div>
 
     <script>
         // Square assignments from user data
@@ -490,6 +712,9 @@
         const payouts = { q1: 20, q2: 40, q3: 20, q4: 60 };
         const quarterScores = { q1: null, q2: null, q3: null, q4: null };
         let currentHomeDigit = 0, currentAwayDigit = 0;
+        let currentHomeScore = 0, currentAwayScore = 0;
+        let hotSquaresMode = 'all'; // 'all', 'away', 'home', 'none'
+        const scoringPlays = [3, 6, 7, 8]; // FG, TD, TD+PAT, TD+2pt
 
         function getWinnerForScore(homeScore, awayScore) {
             const key = `${homeScore % 10}-${awayScore % 10}`;
@@ -529,17 +754,17 @@
         }
 
         function updateWinner() {
-            const awayScore = parseInt(document.getElementById('team1').value) || 0;
-            const homeScore = parseInt(document.getElementById('team2').value) || 0;
+            currentAwayScore = parseInt(document.getElementById('team1').value) || 0;
+            currentHomeScore = parseInt(document.getElementById('team2').value) || 0;
 
-            currentAwayDigit = awayScore % 10;
-            currentHomeDigit = homeScore % 10;
+            currentAwayDigit = currentAwayScore % 10;
+            currentHomeDigit = currentHomeScore % 10;
 
             // Lookup uses Patriots(home)-Seahawks(away) format from squares data
             const key = `${currentHomeDigit}-${currentAwayDigit}`;
             const winner = lookup[key];
 
-            document.getElementById('combo').textContent = `${awayScore} - ${homeScore} (${currentHomeDigit}-${currentAwayDigit})`;
+            document.getElementById('combo').textContent = `${currentAwayScore} - ${currentHomeScore} (${currentHomeDigit}-${currentAwayDigit})`;
 
             if (winner) {
                 document.getElementById('winner').textContent = winner;
@@ -549,6 +774,63 @@
                 document.getElementById('winner').className = 'no-winner';
             }
 
+            updateScenarios();
+            updateGrid();
+        }
+
+        function updateScenarios() {
+            const currentWinner = lookup[`${currentHomeDigit}-${currentAwayDigit}`] || '???';
+
+            // Update current score display
+            document.getElementById('scenario-score').textContent = `${currentAwayScore} - ${currentHomeScore}`;
+            document.getElementById('scenario-winner').textContent = currentWinner;
+
+            // Away team scenarios
+            for (const pts of scoringPlays) {
+                const newAway = currentAwayScore + pts;
+                const winner = lookup[`${currentHomeDigit}-${newAway % 10}`] || '???';
+                const el = document.getElementById(`away-${pts}`);
+                const scoreEl = document.getElementById(`away-${pts}-score`);
+                el.textContent = winner;
+                scoreEl.textContent = `${newAway}-${currentHomeScore}`;
+                el.classList.toggle('current', winner === currentWinner);
+            }
+
+            // Home team scenarios
+            for (const pts of scoringPlays) {
+                const newHome = currentHomeScore + pts;
+                const winner = lookup[`${newHome % 10}-${currentAwayDigit}`] || '???';
+                const el = document.getElementById(`home-${pts}`);
+                const scoreEl = document.getElementById(`home-${pts}-score`);
+                el.textContent = winner;
+                scoreEl.textContent = `${currentAwayScore}-${newHome}`;
+                el.classList.toggle('current', winner === currentWinner);
+            }
+        }
+
+        function getHotSquares() {
+            const hotAway = new Set();
+            const hotHome = new Set();
+
+            // Away team scoring possibilities
+            for (const pts of scoringPlays) {
+                const newAwayDigit = (currentAwayScore + pts) % 10;
+                hotAway.add(`${currentHomeDigit}-${newAwayDigit}`);
+            }
+
+            // Home team scoring possibilities
+            for (const pts of scoringPlays) {
+                const newHomeDigit = (currentHomeScore + pts) % 10;
+                hotHome.add(`${newHomeDigit}-${currentAwayDigit}`);
+            }
+
+            return { hotAway, hotHome };
+        }
+
+        function toggleHotSquares(btn, mode) {
+            hotSquaresMode = mode;
+            document.querySelectorAll('.grid-toggle').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
             updateGrid();
         }
 
@@ -576,8 +858,12 @@
                         const away = competitors.find(c => c.homeAway === 'away');
 
                         // Update team names (display as Away vs Home)
-                        document.getElementById('team1-name').textContent = away?.team?.abbreviation || 'Away';
-                        document.getElementById('team2-name').textContent = home?.team?.abbreviation || 'Home';
+                        const awayAbbr = away?.team?.abbreviation || 'Away';
+                        const homeAbbr = home?.team?.abbreviation || 'Home';
+                        document.getElementById('team1-name').textContent = awayAbbr;
+                        document.getElementById('team2-name').textContent = homeAbbr;
+                        document.getElementById('away-team-label').textContent = `${awayAbbr} scores`;
+                        document.getElementById('home-team-label').textContent = `${homeAbbr} scores`;
 
                         // Update scores
                         document.getElementById('team1').value = away?.score || 0;
@@ -634,18 +920,25 @@
         }
 
         // View switching
+        let currentView = 'live';
+        const viewOrder = ['live', 'scenarios', 'grid'];
+
         function showView(view) {
+            currentView = view;
             const views = document.getElementById('views');
             const tabs = document.querySelectorAll('.tab');
 
-            if (view === 'grid') {
-                views.classList.add('show-grid');
-                tabs[0].classList.remove('active');
+            views.classList.remove('show-scenarios', 'show-grid');
+            tabs.forEach(t => t.classList.remove('active'));
+
+            if (view === 'scenarios') {
+                views.classList.add('show-scenarios');
                 tabs[1].classList.add('active');
+            } else if (view === 'grid') {
+                views.classList.add('show-grid');
+                tabs[2].classList.add('active');
             } else {
-                views.classList.remove('show-grid');
                 tabs[0].classList.add('active');
-                tabs[1].classList.remove('active');
             }
         }
 
@@ -658,10 +951,13 @@
             const touchEndX = e.changedTouches[0].clientX;
             const diff = touchStartX - touchEndX;
             if (Math.abs(diff) > 50) {
-                if (diff > 0) {
-                    showView('grid');
-                } else {
-                    showView('live');
+                const currentIndex = viewOrder.indexOf(currentView);
+                if (diff > 0 && currentIndex < viewOrder.length - 1) {
+                    // Swipe left - go to next view
+                    showView(viewOrder[currentIndex + 1]);
+                } else if (diff < 0 && currentIndex > 0) {
+                    // Swipe right - go to previous view
+                    showView(viewOrder[currentIndex - 1]);
                 }
             }
         });
@@ -692,10 +988,40 @@
 
         // Update grid highlighting
         function updateGrid() {
+            const { hotAway, hotHome } = getHotSquares();
+
             // Clear all highlights
             document.querySelectorAll('.squares-grid td').forEach(td => {
-                td.classList.remove('winner', 'q1-winner', 'q2-winner', 'q3-winner');
+                td.classList.remove('winner', 'q1-winner', 'q2-winner', 'q3-winner', 'hot-away', 'hot-home', 'hot-both');
             });
+
+            // Highlight hot squares based on mode
+            if (hotSquaresMode !== 'none') {
+                for (let p = 0; p <= 9; p++) {
+                    for (let s = 0; s <= 9; s++) {
+                        const key = `${p}-${s}`;
+                        const cell = document.getElementById(`cell-${p}-${s}`);
+                        if (!cell) continue;
+
+                        const isHotAway = hotAway.has(key);
+                        const isHotHome = hotHome.has(key);
+
+                        if (hotSquaresMode === 'all') {
+                            if (isHotAway && isHotHome) {
+                                cell.classList.add('hot-both');
+                            } else if (isHotAway) {
+                                cell.classList.add('hot-away');
+                            } else if (isHotHome) {
+                                cell.classList.add('hot-home');
+                            }
+                        } else if (hotSquaresMode === 'away' && isHotAway) {
+                            cell.classList.add('hot-away');
+                        } else if (hotSquaresMode === 'home' && isHotHome) {
+                            cell.classList.add('hot-home');
+                        }
+                    }
+                }
+            }
 
             // Highlight quarter winners
             for (const [q, qClass] of [['q1', 'q1-winner'], ['q2', 'q2-winner'], ['q3', 'q3-winner']]) {
@@ -706,7 +1032,7 @@
                 }
             }
 
-            // Highlight current winner
+            // Highlight current winner (on top of hot squares)
             const currentCell = document.getElementById(`cell-${currentHomeDigit}-${currentAwayDigit}`);
             if (currentCell) currentCell.classList.add('winner');
         }
