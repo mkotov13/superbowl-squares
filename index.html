@@ -14,12 +14,63 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Tab Navigation */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            padding: 15px 20px 0;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            z-index: 100;
+        }
+        .tab {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+        .tab:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+        .tab.active {
+            background: #4fc3f7;
+            color: #1a1a2e;
+        }
+
+        /* Views Container */
+        .views {
+            display: flex;
+            width: 200%;
+            transition: transform 0.3s ease;
+        }
+        .views.show-grid {
+            transform: translateX(-50%);
+        }
+        .view {
+            width: 50%;
+            min-height: calc(100vh - 60px);
+            padding: 20px;
+        }
+
+        /* Live View */
+        .live-view {
             display: flex;
             flex-direction: row;
             justify-content: center;
             gap: 40px;
-            padding: 20px;
-            color: white;
             flex-wrap: wrap;
         }
         .main {
@@ -28,15 +79,15 @@
             align-items: center;
         }
         h1 {
-            font-size: 2rem;
-            margin-bottom: 30px;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
             text-align: center;
         }
         .score-input {
             display: flex;
             gap: 20px;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
             justify-content: center;
         }
@@ -44,16 +95,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .team-name {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
         }
         .team input {
-            width: 100px;
-            height: 80px;
-            font-size: 3rem;
+            width: 80px;
+            height: 70px;
+            font-size: 2.5rem;
             text-align: center;
             border: none;
             border-radius: 12px;
@@ -70,57 +121,30 @@
         }
         .result {
             text-align: center;
-            margin-top: 20px;
         }
         .winner-initials {
-            font-size: 12rem;
+            font-size: 10rem;
             font-weight: 900;
             background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 60px rgba(255, 215, 0, 0.5);
             line-height: 1;
-            margin: 20px 0;
+            margin: 10px 0;
         }
         .winning-combo {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #4fc3f7;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         .no-winner {
             font-size: 3rem;
             color: #ff6b6b;
         }
-        .quarters {
-            display: flex;
-            gap: 10px;
-            margin-top: 40px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .quarter-btn {
-            padding: 10px 20px;
-            font-size: 1rem;
-            border: 2px solid rgba(255,255,255,0.3);
-            background: transparent;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .quarter-btn:hover {
-            background: rgba(255,255,255,0.1);
-        }
-        .quarter-btn.active {
-            background: #4fc3f7;
-            border-color: #4fc3f7;
-            color: #1a1a2e;
-        }
         .live-score {
-            margin-top: 30px;
-            padding: 15px 30px;
-            font-size: 1.1rem;
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 1rem;
             background: #4fc3f7;
             border: none;
             border-radius: 8px;
@@ -131,31 +155,29 @@
         .live-score:hover {
             background: #29b6f6;
         }
-        .live-score:disabled {
-            background: #666;
-            cursor: not-allowed;
-        }
         .status {
-            margin-top: 15px;
-            font-size: 0.9rem;
+            margin-top: 12px;
+            font-size: 0.85rem;
             color: #aaa;
         }
+
+        /* Payouts */
         .payouts {
             background: rgba(255,255,255,0.05);
             border-radius: 16px;
-            padding: 24px;
-            min-width: 280px;
+            padding: 20px;
+            min-width: 260px;
         }
         .payouts h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
             text-align: center;
         }
         .payout-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 10px 0;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         .payout-row:last-child {
@@ -164,16 +186,17 @@
         .payout-quarter {
             font-weight: 600;
             color: #aaa;
+            min-width: 45px;
         }
         .payout-amount {
             font-weight: 700;
             color: #4fc3f7;
         }
         .payout-winner {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 900;
             color: #ffd700;
-            min-width: 50px;
+            min-width: 45px;
             text-align: center;
         }
         .payout-winner.pending {
@@ -181,23 +204,25 @@
             font-size: 1rem;
         }
         .payout-score {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #888;
+            min-width: 50px;
+            text-align: center;
         }
         .payout-total {
-            margin-top: 20px;
-            padding-top: 15px;
+            margin-top: 15px;
+            padding-top: 12px;
             border-top: 2px solid rgba(255,255,255,0.2);
         }
         .payout-total h3 {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
+            font-size: 1rem;
+            margin-bottom: 8px;
             color: #aaa;
         }
         .total-row {
             display: flex;
             justify-content: space-between;
-            padding: 4px 0;
+            padding: 3px 0;
         }
         .total-initials {
             font-weight: 700;
@@ -207,64 +232,218 @@
             font-weight: 700;
             color: #4fc3f7;
         }
+
+        /* Grid View */
+        .grid-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+        }
+        .grid-view h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        .grid-subtitle {
+            font-size: 0.85rem;
+            color: #aaa;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .grid-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        .squares-grid {
+            border-collapse: collapse;
+            font-size: 0.75rem;
+        }
+        .squares-grid th, .squares-grid td {
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .squares-grid th {
+            background: rgba(79, 195, 247, 0.3);
+            font-weight: 700;
+            color: #4fc3f7;
+        }
+        .squares-grid .corner {
+            background: transparent;
+            border: none;
+            font-size: 0.6rem;
+            color: #888;
+            line-height: 1.2;
+        }
+        .squares-grid td {
+            background: rgba(255,255,255,0.05);
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .squares-grid td.winner {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            color: #1a1a2e;
+            font-weight: 900;
+            font-size: 0.9rem;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        .squares-grid td.q1-winner {
+            box-shadow: inset 0 0 0 2px #4fc3f7;
+        }
+        .squares-grid td.q2-winner {
+            box-shadow: inset 0 0 0 2px #9c27b0;
+        }
+        .squares-grid td.q3-winner {
+            box-shadow: inset 0 0 0 2px #ff9800;
+        }
+
+        /* Grid Legend */
+        .grid-legend {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .legend-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        .legend-box.current {
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+        }
+        .legend-box.q1 {
+            background: rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 0 2px #4fc3f7;
+        }
+        .legend-box.q2 {
+            background: rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 0 2px #9c27b0;
+        }
+        .legend-box.q3 {
+            background: rgba(255,255,255,0.05);
+            box-shadow: inset 0 0 0 2px #ff9800;
+        }
+
+        /* Swipe hint */
+        .swipe-hint {
+            text-align: center;
+            color: #666;
+            font-size: 0.8rem;
+            padding: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .live-view {
+                flex-direction: column;
+                align-items: center;
+            }
+            .winner-initials {
+                font-size: 8rem;
+            }
+            .payouts {
+                width: 100%;
+                max-width: 350px;
+            }
+            .squares-grid th, .squares-grid td {
+                width: 32px;
+                height: 32px;
+                font-size: 0.7rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="main">
-        <h1>🏈 Super Bowl Squares 2026</h1>
-
-        <div class="score-input">
-            <div class="team">
-                <span class="team-name" id="team1-name">Team 1</span>
-                <input type="number" id="team1" min="0" value="0" oninput="updateWinner()">
-            </div>
-            <span class="vs">vs</span>
-            <div class="team">
-                <span class="team-name" id="team2-name">Team 2</span>
-                <input type="number" id="team2" min="0" value="0" oninput="updateWinner()">
-            </div>
-        </div>
-
-        <div class="result">
-            <div class="winning-combo" id="combo"></div>
-            <div class="winner-initials" id="winner"></div>
-        </div>
-
-        <button class="live-score" onclick="fetchLiveScore()">🔴 Fetch Live Score</button>
-        <div class="status" id="status"></div>
+    <div class="tabs">
+        <button class="tab active" onclick="showView('live')">Live</button>
+        <button class="tab" onclick="showView('grid')">Grid</button>
     </div>
 
-    <div class="payouts">
-        <h2>Payouts</h2>
-        <div class="payout-row">
-            <span class="payout-quarter">Q1</span>
-            <span class="payout-score" id="q1-score">-</span>
-            <span class="payout-winner pending" id="q1-winner">--</span>
-            <span class="payout-amount">$20</span>
+    <div class="views" id="views">
+        <!-- Live View -->
+        <div class="view live-view">
+            <div class="main">
+                <h1>🏈 Super Bowl 2026</h1>
+
+                <div class="score-input">
+                    <div class="team">
+                        <span class="team-name" id="team1-name">SEA</span>
+                        <input type="number" id="team1" min="0" value="0" oninput="updateWinner()">
+                    </div>
+                    <span class="vs">vs</span>
+                    <div class="team">
+                        <span class="team-name" id="team2-name">NE</span>
+                        <input type="number" id="team2" min="0" value="0" oninput="updateWinner()">
+                    </div>
+                </div>
+
+                <div class="result">
+                    <div class="winning-combo" id="combo"></div>
+                    <div class="winner-initials" id="winner"></div>
+                </div>
+
+                <button class="live-score" onclick="fetchLiveScore()">🔴 Fetch Live Score</button>
+                <div class="status" id="status"></div>
+            </div>
+
+            <div class="payouts">
+                <h2>Payouts</h2>
+                <div class="payout-row">
+                    <span class="payout-quarter">Q1</span>
+                    <span class="payout-score" id="q1-score">-</span>
+                    <span class="payout-winner pending" id="q1-winner">--</span>
+                    <span class="payout-amount">$20</span>
+                </div>
+                <div class="payout-row">
+                    <span class="payout-quarter">Half</span>
+                    <span class="payout-score" id="q2-score">-</span>
+                    <span class="payout-winner pending" id="q2-winner">--</span>
+                    <span class="payout-amount">$40</span>
+                </div>
+                <div class="payout-row">
+                    <span class="payout-quarter">Q3</span>
+                    <span class="payout-score" id="q3-score">-</span>
+                    <span class="payout-winner pending" id="q3-winner">--</span>
+                    <span class="payout-amount">$20</span>
+                </div>
+                <div class="payout-row">
+                    <span class="payout-quarter">Final</span>
+                    <span class="payout-score" id="q4-score">-</span>
+                    <span class="payout-winner pending" id="q4-winner">--</span>
+                    <span class="payout-amount">$60</span>
+                </div>
+                <div class="payout-total">
+                    <h3>Totals</h3>
+                    <div id="totals-list"></div>
+                </div>
+            </div>
         </div>
-        <div class="payout-row">
-            <span class="payout-quarter">Half</span>
-            <span class="payout-score" id="q2-score">-</span>
-            <span class="payout-winner pending" id="q2-winner">--</span>
-            <span class="payout-amount">$40</span>
-        </div>
-        <div class="payout-row">
-            <span class="payout-quarter">Q3</span>
-            <span class="payout-score" id="q3-score">-</span>
-            <span class="payout-winner pending" id="q3-winner">--</span>
-            <span class="payout-amount">$20</span>
-        </div>
-        <div class="payout-row">
-            <span class="payout-quarter">Final</span>
-            <span class="payout-score" id="q4-score">-</span>
-            <span class="payout-winner pending" id="q4-winner">--</span>
-            <span class="payout-amount">$60</span>
-        </div>
-        <div class="payout-total">
-            <h3>Totals</h3>
-            <div id="totals-list"></div>
+
+        <!-- Grid View -->
+        <div class="view grid-view">
+            <h2>All Squares</h2>
+            <div class="grid-subtitle">NE (rows) vs SEA (columns)</div>
+            <div class="grid-container">
+                <table class="squares-grid" id="squares-grid"></table>
+            </div>
+            <div class="grid-legend">
+                <div class="legend-item"><div class="legend-box current"></div> Current</div>
+                <div class="legend-item"><div class="legend-box q1"></div> Q1</div>
+                <div class="legend-item"><div class="legend-box q2"></div> Half</div>
+                <div class="legend-item"><div class="legend-box q3"></div> Q3</div>
+            </div>
         </div>
     </div>
+
+    <div class="swipe-hint">Swipe or tap tabs to switch views</div>
 
     <script>
         // Square assignments from user data
@@ -299,7 +478,7 @@
             ]
         };
 
-        // Build lookup map: "P-S" -> initials
+        // Build lookup map: "P-S" -> initials (Patriots digit - Seahawks digit)
         const lookup = {};
         for (const [initials, combos] of Object.entries(squares)) {
             for (const [p, s] of combos) {
@@ -310,6 +489,7 @@
         // Quarter payouts
         const payouts = { q1: 20, q2: 40, q3: 20, q4: 60 };
         const quarterScores = { q1: null, q2: null, q3: null, q4: null };
+        let currentHomeDigit = 0, currentAwayDigit = 0;
 
         function getWinnerForScore(homeScore, awayScore) {
             const key = `${homeScore % 10}-${awayScore % 10}`;
@@ -352,14 +532,14 @@
             const awayScore = parseInt(document.getElementById('team1').value) || 0;
             const homeScore = parseInt(document.getElementById('team2').value) || 0;
 
-            const awayDigit = awayScore % 10;
-            const homeDigit = homeScore % 10;
+            currentAwayDigit = awayScore % 10;
+            currentHomeDigit = homeScore % 10;
 
             // Lookup uses Patriots(home)-Seahawks(away) format from squares data
-            const key = `${homeDigit}-${awayDigit}`;
+            const key = `${currentHomeDigit}-${currentAwayDigit}`;
             const winner = lookup[key];
 
-            document.getElementById('combo').textContent = `${awayScore} - ${homeScore} (${homeDigit}-${awayDigit})`;
+            document.getElementById('combo').textContent = `${awayScore} - ${homeScore} (${currentHomeDigit}-${currentAwayDigit})`;
 
             if (winner) {
                 document.getElementById('winner').textContent = winner;
@@ -368,6 +548,8 @@
                 document.getElementById('winner').textContent = '???';
                 document.getElementById('winner').className = 'no-winner';
             }
+
+            updateGrid();
         }
 
         let autoRefresh = null;
@@ -451,7 +633,86 @@
             }
         }
 
-        // Initialize - fetch live score on page load
+        // View switching
+        function showView(view) {
+            const views = document.getElementById('views');
+            const tabs = document.querySelectorAll('.tab');
+
+            if (view === 'grid') {
+                views.classList.add('show-grid');
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            } else {
+                views.classList.remove('show-grid');
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            }
+        }
+
+        // Touch swipe support
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.touches[0].clientX;
+        });
+        document.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].clientX;
+            const diff = touchStartX - touchEndX;
+            if (Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    showView('grid');
+                } else {
+                    showView('live');
+                }
+            }
+        });
+
+        // Build the grid
+        function buildGrid() {
+            const grid = document.getElementById('squares-grid');
+            let html = '<tr><th class="corner">NE↓<br>SEA→</th>';
+
+            // Header row (Seahawks digits 0-9)
+            for (let s = 0; s <= 9; s++) {
+                html += `<th>${s}</th>`;
+            }
+            html += '</tr>';
+
+            // Data rows (Patriots digits 0-9)
+            for (let p = 0; p <= 9; p++) {
+                html += `<tr><th>${p}</th>`;
+                for (let s = 0; s <= 9; s++) {
+                    const initials = lookup[`${p}-${s}`] || '?';
+                    html += `<td id="cell-${p}-${s}">${initials}</td>`;
+                }
+                html += '</tr>';
+            }
+
+            grid.innerHTML = html;
+        }
+
+        // Update grid highlighting
+        function updateGrid() {
+            // Clear all highlights
+            document.querySelectorAll('.squares-grid td').forEach(td => {
+                td.classList.remove('winner', 'q1-winner', 'q2-winner', 'q3-winner');
+            });
+
+            // Highlight quarter winners
+            for (const [q, qClass] of [['q1', 'q1-winner'], ['q2', 'q2-winner'], ['q3', 'q3-winner']]) {
+                const scores = quarterScores[q];
+                if (scores) {
+                    const cell = document.getElementById(`cell-${scores.home % 10}-${scores.away % 10}`);
+                    if (cell) cell.classList.add(qClass);
+                }
+            }
+
+            // Highlight current winner
+            const currentCell = document.getElementById(`cell-${currentHomeDigit}-${currentAwayDigit}`);
+            if (currentCell) currentCell.classList.add('winner');
+        }
+
+        // Initialize
+        buildGrid();
         fetchLiveScore();
     </script>
 </body>
