@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Bowl Squares</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 40px;
+            padding: 20px;
+            color: white;
+            flex-wrap: wrap;
+        }
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .score-input {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .team-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .team input {
+            width: 100px;
+            height: 80px;
+            font-size: 3rem;
+            text-align: center;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .team input:focus {
+            outline: 2px solid #4fc3f7;
+        }
+        .vs {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #aaa;
+        }
+        .result {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .winner-initials {
+            font-size: 12rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(255, 215, 0, 0.5);
+            line-height: 1;
+            margin: 20px 0;
+        }
+        .winning-combo {
+            font-size: 2rem;
+            color: #4fc3f7;
+            margin-bottom: 10px;
+        }
+        .no-winner {
+            font-size: 3rem;
+            color: #ff6b6b;
+        }
+        .quarters {
+            display: flex;
+            gap: 10px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .quarter-btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .quarter-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .quarter-btn.active {
+            background: #4fc3f7;
+            border-color: #4fc3f7;
+            color: #1a1a2e;
+        }
+        .live-score {
+            margin-top: 30px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            background: #4fc3f7;
+            border: none;
+            border-radius: 8px;
+            color: #1a1a2e;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .live-score:hover {
+            background: #29b6f6;
+        }
+        .live-score:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        .status {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        .payouts {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 24px;
+            min-width: 280px;
+        }
+        .payouts h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .payout-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .payout-row:last-child {
+            border-bottom: none;
+        }
+        .payout-quarter {
+            font-weight: 600;
+            color: #aaa;
+        }
+        .payout-amount {
+            font-weight: 700;
+            color: #4fc3f7;
+        }
+        .payout-winner {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #ffd700;
+            min-width: 50px;
+            text-align: center;
+        }
+        .payout-winner.pending {
+            color: #666;
+            font-size: 1rem;
+        }
+        .payout-score {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        .payout-total {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255,255,255,0.2);
+        }
+        .payout-total h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #aaa;
+        }
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+        }
+        .total-initials {
+            font-weight: 700;
+            color: #ffd700;
+        }
+        .total-amount {
+            font-weight: 700;
+            color: #4fc3f7;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>🏈 Super Bowl Squares 2026</h1>
+
+        <div class="score-input">
+            <div class="team">
+                <span class="team-name" id="team1-name">Team 1</span>
+                <input type="number" id="team1" min="0" value="0" oninput="updateWinner()">
+            </div>
+            <span class="vs">vs</span>
+            <div class="team">
+                <span class="team-name" id="team2-name">Team 2</span>
+                <input type="number" id="team2" min="0" value="0" oninput="updateWinner()">
+            </div>
+        </div>
+
+        <div class="result">
+            <div class="winning-combo" id="combo"></div>
+            <div class="winner-initials" id="winner"></div>
+        </div>
+
+        <button class="live-score" onclick="fetchLiveScore()">🔴 Fetch Live Score</button>
+        <div class="status" id="status"></div>
+    </div>
+
+    <div class="payouts">
+        <h2>Payouts</h2>
+        <div class="payout-row">
+            <span class="payout-quarter">Q1</span>
+            <span class="payout-score" id="q1-score">-</span>
+            <span class="payout-winner pending" id="q1-winner">--</span>
+            <span class="payout-amount">$20</span>
+        </div>
+        <div class="payout-row">
+            <span class="payout-quarter">Half</span>
+            <span class="payout-score" id="q2-score">-</span>
+            <span class="payout-winner pending" id="q2-winner">--</span>
+            <span class="payout-amount">$40</span>
+        </div>
+        <div class="payout-row">
+            <span class="payout-quarter">Q3</span>
+            <span class="payout-score" id="q3-score">-</span>
+            <span class="payout-winner pending" id="q3-winner">--</span>
+            <span class="payout-amount">$20</span>
+        </div>
+        <div class="payout-row">
+            <span class="payout-quarter">Final</span>
+            <span class="payout-score" id="q4-score">-</span>
+            <span class="payout-winner pending" id="q4-winner">--</span>
+            <span class="payout-amount">$60</span>
+        </div>
+        <div class="payout-total">
+            <h3>Totals</h3>
+            <div id="totals-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // Square assignments from user data
+        const squares = {
+            "AC": [
+                [0,9],[1,7],[1,8],[2,0],[2,3],[2,5],[3,6],[4,3],[4,7],
+                [7,3],[7,5],[7,7],[7,8],[8,0]
+            ],
+            "WX": [
+                [0,2],[0,4],[0,6],[1,4],[1,5],[2,2],[3,0],[3,3],[3,8],
+                [5,3],[6,8],[7,1],[8,6],[8,9]
+            ],
+            "CD": [
+                [0,3],[0,7],[2,4],[2,6],[2,7],[3,4],[3,7],[3,9],[4,5],
+                [4,9],[7,0],[7,9],[8,5],[9,4]
+            ],
+            "CC": [
+                [0,8],[1,0],[1,3],[3,5],[4,0],[4,8],[5,1],[5,2],[7,2],
+                [8,1],[8,4],[8,8],[9,0],[9,3]
+            ],
+            "MK": [
+                [0,0],[0,1],[1,1],[1,2],[5,4],[5,5],[5,8],[5,9],[6,6],
+                [6,9],[7,4],[7,6],[9,5],[9,6]
+            ],
+            "RY": [
+                [0,5],[1,6],[2,8],[2,9],[3,2],[4,4],[4,6],[5,0],[6,2],
+                [6,7],[8,2],[9,1],[9,8],[9,9]
+            ],
+            "LZ": [
+                [1,9],[2,1],[3,1],[4,1],[4,2],[5,6],[6,0],[6,1],[6,3],
+                [6,4],[6,5],[8,7],[9,2],[9,7]
+            ]
+        };
+
+        // Build lookup map: "P-S" -> initials
+        const lookup = {};
+        for (const [initials, combos] of Object.entries(squares)) {
+            for (const [p, s] of combos) {
+                lookup[`${p}-${s}`] = initials;
+            }
+        }
+
+        // Quarter payouts
+        const payouts = { q1: 20, q2: 40, q3: 20, q4: 60 };
+        const quarterScores = { q1: null, q2: null, q3: null, q4: null };
+
+        function getWinnerForScore(homeScore, awayScore) {
+            const key = `${homeScore % 10}-${awayScore % 10}`;
+            return lookup[key] || '???';
+        }
+
+        function updatePayouts() {
+            const totals = {};
+
+            for (const q of ['q1', 'q2', 'q3', 'q4']) {
+                const scores = quarterScores[q];
+                const winnerEl = document.getElementById(`${q}-winner`);
+                const scoreEl = document.getElementById(`${q}-score`);
+
+                if (scores) {
+                    const winner = getWinnerForScore(scores.home, scores.away);
+                    winnerEl.textContent = winner;
+                    winnerEl.classList.remove('pending');
+                    scoreEl.textContent = `${scores.away}-${scores.home}`;
+
+                    if (winner !== '???') {
+                        totals[winner] = (totals[winner] || 0) + payouts[q];
+                    }
+                } else {
+                    winnerEl.textContent = '--';
+                    winnerEl.classList.add('pending');
+                    scoreEl.textContent = '-';
+                }
+            }
+
+            // Update totals
+            const totalsList = document.getElementById('totals-list');
+            const sorted = Object.entries(totals).sort((a, b) => b[1] - a[1]);
+            totalsList.innerHTML = sorted.length ? sorted.map(([initials, amount]) =>
+                `<div class="total-row"><span class="total-initials">${initials}</span><span class="total-amount">$${amount}</span></div>`
+            ).join('') : '<div style="color:#666">No winners yet</div>';
+        }
+
+        function updateWinner() {
+            const awayScore = parseInt(document.getElementById('team1').value) || 0;
+            const homeScore = parseInt(document.getElementById('team2').value) || 0;
+
+            const awayDigit = awayScore % 10;
+            const homeDigit = homeScore % 10;
+
+            // Lookup uses Patriots(home)-Seahawks(away) format from squares data
+            const key = `${homeDigit}-${awayDigit}`;
+            const winner = lookup[key];
+
+            document.getElementById('combo').textContent = `${awayScore} - ${homeScore} (${homeDigit}-${awayDigit})`;
+
+            if (winner) {
+                document.getElementById('winner').textContent = winner;
+                document.getElementById('winner').className = 'winner-initials';
+            } else {
+                document.getElementById('winner').textContent = '???';
+                document.getElementById('winner').className = 'no-winner';
+            }
+        }
+
+        let autoRefresh = null;
+
+        async function fetchLiveScore() {
+            const status = document.getElementById('status');
+            status.textContent = 'Fetching live score...';
+
+            try {
+                // ESPN API for NFL scores (no API key needed)
+                const response = await fetch('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard');
+                const data = await response.json();
+
+                // Find games
+                const games = data.events || [];
+                let found = false;
+
+                for (const game of games) {
+                    const competitors = game.competitions?.[0]?.competitors || [];
+                    const gameState = game.status?.type?.state; // pre, in, post
+
+                    if (competitors.length === 2) {
+                        const home = competitors.find(c => c.homeAway === 'home');
+                        const away = competitors.find(c => c.homeAway === 'away');
+
+                        // Update team names (display as Away vs Home)
+                        document.getElementById('team1-name').textContent = away?.team?.abbreviation || 'Away';
+                        document.getElementById('team2-name').textContent = home?.team?.abbreviation || 'Home';
+
+                        // Update scores
+                        document.getElementById('team1').value = away?.score || 0;
+                        document.getElementById('team2').value = home?.score || 0;
+
+                        const currentQuarter = game.status?.period || 0;
+                        const clock = game.status?.displayClock || '';
+                        const stateText = gameState === 'in' ? `Q${currentQuarter} ${clock}` :
+                                         gameState === 'post' ? 'FINAL' : 'Pregame';
+
+                        status.textContent = `🔴 ${away?.team?.abbreviation} ${away?.score} vs ${home?.team?.abbreviation} ${home?.score} | ${stateText}`;
+
+                        // Get linescore data for quarter-by-quarter scores
+                        const homeLinescores = home?.linescores || [];
+                        const awayLinescores = away?.linescores || [];
+
+                        // Calculate cumulative scores for each quarter end
+                        for (let q = 1; q <= 4; q++) {
+                            // Only lock in scores for completed quarters
+                            const quarterComplete = (gameState === 'post') || (currentQuarter > q) ||
+                                (currentQuarter === q && clock === '0:00');
+
+                            if (quarterComplete && homeLinescores.length >= q) {
+                                let homeTotal = 0, awayTotal = 0;
+                                for (let i = 0; i < q; i++) {
+                                    homeTotal += parseInt(homeLinescores[i]?.value) || 0;
+                                    awayTotal += parseInt(awayLinescores[i]?.value) || 0;
+                                }
+                                quarterScores[`q${q}`] = { home: homeTotal, away: awayTotal };
+                            }
+                        }
+
+                        updatePayouts();
+
+                        // Auto-refresh every 30s if game is live
+                        if (gameState === 'in' && !autoRefresh) {
+                            autoRefresh = setInterval(fetchLiveScore, 30000);
+                            status.textContent += ' (auto-updating)';
+                        }
+
+                        found = true;
+                        updateWinner();
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    status.textContent = 'No games found. Enter score manually.';
+                }
+            } catch (err) {
+                status.textContent = 'Could not fetch live score. Enter manually.';
+                console.error(err);
+            }
+        }
+
+        // Initialize - fetch live score on page load
+        fetchLiveScore();
+    </script>
+</body>
+</html>
